@@ -1,0 +1,63 @@
+version: '3'
+
+services:
+    node:
+        build:
+            context: ./docker/node
+            dockerfile: Dockerfile
+        image: auth/app
+        command: "npm run dev"
+        ports:
+            - '${APP_PORT:-3000}:3000'
+            - "9229:9229"
+        # environment:
+
+        volumes:
+            - './:/usr/app'
+        networks:
+            - lan
+        depends_on:
+            - postgres
+
+    postgres:
+        # container_name: postgres_container
+        # image: postgres
+        user: postgres
+        build:
+            context: ./docker/postgres
+            dockerfile: Dockerfile
+        image: auth/database
+        environment:
+            POSTGRES_USER: ${DB_USER:-postgres}
+            POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
+            PGDATA: /data/postgres
+        volumes:
+            - postgres:/data/postgres
+        ports:
+            - '${DB_PORT:-5432}:5432'
+        networks:
+            - lan
+        restart: unless-stopped
+
+    # pgadmin:
+    #     container_name: pgadmin_container
+    #     image: dpage/pgadmin4
+    #     environment:
+    #         PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+    #         PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+    #         PGADMIN_CONFIG_SERVER_MODE: 'False'
+    #     volumes:
+    #         - pgadmin:/var/lib/pgadmin
+    #     ports:
+    #         - "${PGADMIN_PORT:-5050}:80"
+    #     networks:
+    #         - lan
+    #     restart: unless-stopped
+
+networks:
+    lan:
+        driver: bridge
+
+volumes:
+    postgres:
+    # pgadmin:
