@@ -7,7 +7,8 @@ FROM node:alpine
 WORKDIR /usr/app
 
 ## Copia tudo que começa com package e termina com .json para dentro da pasta /usr/app
-# COPY ../../package*.json ./
+COPY package*.json ./
+COPY nodemon.json ./
 
 ## Executa npm install para adicionar as dependências e criar a pasta node_modules
 # RUN npm install
@@ -19,7 +20,7 @@ WORKDIR /usr/app
 
 ## Container ficará ouvindo os acessos na porta 3000
 EXPOSE 3000
-EXPOSE 9229
+# EXPOSE 9222
 
 ## Não se repete no Dockerfile
 ## Executa o comando npm start para iniciar o script que que está no package.json

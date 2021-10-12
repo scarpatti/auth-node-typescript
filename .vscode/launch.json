@@ -1,22 +1,14 @@
 {
-
     "version": "0.2.0",
     "configurations": [
-    {
-        "name": "Docker: Attach to Node",
-        "type": "node",
-        "request": "attach",
-        "restart": true,
-        "port": 9229,
-        "address": "127.0.0.1",
-        "localRoot": "${workspaceFolder}",
-        "remoteRoot": "/usr/app",
-        "protocol": "inspector",
-        "trace": true,
-        "sourceMaps":true,
-        "skipFiles": [
-            "<node_internals>/**"
-        ]
-    }
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Docker launch debugging",
+            "port": 9222,
+            "restart": true,
+            "timeout": 600000,
+            "remoteRoot": "/usr/app",
+        },
     ]
 }

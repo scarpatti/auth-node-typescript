@@ -2,30 +2,34 @@ version: '3'
 
 services:
     node:
+        container_name: auth-api-app
         build:
-            context: ./docker/node
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: app.Dockerfile
         image: auth/app
         command: "npm run dev"
         ports:
             - '${APP_PORT:-3000}:3000'
-            - "9229:9229"
+            - "9222:9222"
         # environment:
 
         volumes:
             - './:/usr/app'
+            # - './dist:/usr/app/dist'
+            # - './package.json:/usr/app/package.json'
+            # - './nodemon.json:/usr/app/nodemon.json'
         networks:
             - lan
         depends_on:
             - postgres
 
     postgres:
-        # container_name: postgres_container
+        container_name: auth-api-db
         # image: postgres
         user: postgres
         build:
-            context: ./docker/postgres
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: db.Dockerfile
         image: auth/database
         environment:
             POSTGRES_USER: ${DB_USER:-postgres}
