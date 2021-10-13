@@ -5,8 +5,8 @@ import {AuthController} from '../controllers/auth-controller';
 const authRoutes = express.Router();
 
 authRoutes.post('/register', AuthController.register);
-// authRoutes.post('/authenticate', AuthController.authenticate);
-// authRoutes.post('/refresh', AuthController.refresh);
+authRoutes.post('/authenticate', AuthController.authenticate);
+authRoutes.post('/refresh', AuthController.refresh);
 // authRoutes.get('/me', AuthMiddleware, AuthController.me);
 
 export default authRoutes;

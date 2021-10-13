@@ -1,5 +1,4 @@
-import jwt from "jsonwebtoken";
-import authConfig from "../config/auth";
+import { JwtService } from "../services/jwt-service";
 
 export const AuthMiddleware = async (req: any, res: any, next: any) => {
     const authHeader = req.headers.authorization;
@@ -8,28 +7,21 @@ export const AuthMiddleware = async (req: any, res: any, next: any) => {
         if(!authHeader)
             return res.status(401).json({ error: 'No token provided' });
 
-        const parts = authHeader.split(' ');
+        const token = JwtService.separate(authHeader);
 
-        if(parts.length === 2) {
-            const [ scheme, token ] = parts;
+        JwtService.verify(token).then((decoded: any) => {
+            if(!decoded.access_token) {
+                return res.sendStatus(401);
+            }
 
-            if(!/^Bearer$/i.test(scheme))
-                return res.status(401).json({ error: 'Token malformated' });
+            res.locals.user_id = decoded.user_id;
 
-            jwt.verify(token, authConfig.JWT_KEY, (error: any, decoded: any) => {
-                if(error) return res.status(401).json({ error: 'Invalid Token' });
+            next();
 
-                req.userId = decoded.id;
+        }).catch(() => {
+            return res.status(401).json({ error: 'Invalid Token' });
 
-                next();
-            })
-        } else {
-            return res.status(401).json({ error: 'Token error' });
-
-        }
-
-
-
+        });
 
     } catch(error) {
         return res.status(401).json({ error: 'Invalid Token' });

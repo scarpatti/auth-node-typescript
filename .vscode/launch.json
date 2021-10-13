@@ -9,6 +9,10 @@
             "restart": true,
             "timeout": 600000,
             "remoteRoot": "/usr/app",
+
+            "preLaunchTask": "tsc-watch",
+            // "runtimeExecutable": "docker-compose",
+            // "runtimeArgs": ["up"],
         },
     ]
 }
