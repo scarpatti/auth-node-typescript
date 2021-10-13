@@ -25,8 +25,6 @@ export class JwtService {
 
             resolve(decoded);
         });
-
-        // decoded ? resolve(decoded) : reject(new Error('Error verfy token'));
     })
 
     public static separate = (str: string) => {
