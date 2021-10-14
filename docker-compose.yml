@@ -11,8 +11,6 @@ services:
         ports:
             - '${APP_PORT:-3000}:3000'
             - "9222:9222"
-        # environment:
-
         volumes:
             - './:/usr/app'
         networks:
@@ -59,7 +57,6 @@ services:
             POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
             PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@admin.com}
             PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
-            # PGADMIN_CONFIG_SERVER_MODE: 'False'
         volumes:
             - pgadmin:/var/lib/pgadmin
         ports:

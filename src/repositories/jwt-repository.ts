@@ -1,10 +1,10 @@
 import client from '../cache';
 
-export class JwtRepository {
+export default class JwtRepository {
     public static store = (key: string, expiresIn: number | string, value: string) => new Promise((resolve, reject) => {
         expiresIn = expiresIn as unknown as number;
 
-        client.setex(key, expiresIn, value, (err, reply) => {
+        client.setex(key, expiresIn, value, (err: Error | null, reply: any) => {
             if(err) {
                 reject(new Error('Redis save filed'));
             }
