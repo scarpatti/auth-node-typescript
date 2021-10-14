@@ -1,12 +1,27 @@
 import jwt from 'jsonwebtoken';
-import authConfig from '../config/auth';
+import jwtConfig from '../config/jwt';
+import User from '../models/user-model';
 
-if(!authConfig.JWT_KEY || !authConfig.JWT_EXPIRED)
-    throw new Error('JWT_KEY or JWT_EXPIRED not found!');
+if(!jwtConfig.JWT_KEY || !jwtConfig.JWT_ACCESS_TOKEN_EXPIRED || !jwtConfig.JWT_REFRESH_TOKEN_EXPIRED)
+    throw new Error('JWT_KEY, JWT_ACCESS_TOKEN_EXPIRED OR JWT_REFRESH_TOKEN_EXPIRED not found!');
 
 export class JwtService {
+    public static generateAccessToken = async (user: User) => {
+        return await this.generateToken({
+            user_id: user.id,
+            access_token: true
+        }, jwtConfig.JWT_ACCESS_TOKEN_EXPIRED);
+    }
+
+    public static generateRefreshToken = async (user: User) => {
+        return await this.generateToken({
+            user_id: user.id,
+            refresh_token: true
+        }, jwtConfig.JWT_REFRESH_TOKEN_EXPIRED);
+    }
+
     public static generateToken = async (payload: any, expiresIn: number | string) => new Promise((resolve, reject) => {
-        jwt.sign(payload, authConfig.JWT_KEY, {
+        jwt.sign(payload, jwtConfig.JWT_KEY, {
             expiresIn: expiresIn
         }, (err, token) => {
             if (err) {
@@ -18,7 +33,7 @@ export class JwtService {
     })
 
     public static verify = (token: string) => new Promise((resolve, reject) => {
-        jwt.verify(token, authConfig.JWT_KEY, (err, decoded) => {
+        jwt.verify(token, jwtConfig.JWT_KEY, (err, decoded) => {
             if (err) {
                 reject(new Error(err.message));
             }

@@ -6,7 +6,7 @@ services:
         build:
             context: .
             dockerfile: app.Dockerfile
-        image: auth/app
+        image: node:alpine
         command: "npm run dev"
         ports:
             - '${APP_PORT:-3000}:3000'
@@ -15,17 +15,15 @@ services:
 
         volumes:
             - './:/usr/app'
-            # - './dist:/usr/app/dist'
-            # - './package.json:/usr/app/package.json'
-            # - './nodemon.json:/usr/app/nodemon.json'
         networks:
             - lan
         depends_on:
             - postgres
+            - redis
 
     postgres:
         container_name: auth-api-db
-        # image: postgres
+        image: postgres:12-alpine
         user: postgres
         build:
             context: .
@@ -43,15 +41,18 @@ services:
             - lan
         restart: unless-stopped
 
-    # redis:
-    #     constainer_name: auth-api-db-interface
-    #     image: redis
-    #     command: redis-server --requirepass Redis2019!
-    #     ports:
-    #     - '${REDIS_DB_PORT:-6379}:6379'
+    redis:
+        container_name: auth-api-redis
+        image: redis
+        command: redis-server --requirepass Redis!!@
+        ports:
+            - '${REDIS_DB_PORT:-6379}:6379'
+        networks:
+            - lan
+        restart: unless-stopped
 
     pgadmin:
-        container_name: pgadmin_container
+        container_name: auth-api-db-interface
         image: dpage/pgadmin4
         environment:
             POSTGRES_USER: ${DB_USER:-postgres}
@@ -67,6 +68,7 @@ services:
             - postgres
         networks:
             - lan
+        restart: unless-stopped
 
 networks:
     lan:

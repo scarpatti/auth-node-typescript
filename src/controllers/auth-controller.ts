@@ -12,15 +12,9 @@ export class AuthController {
 
             const user = await User.create(req.body);
 
-            const access_token = await JwtService.generateToken({
-                user_id: user.id,
-                access_token: true
-            }, '5 minutes');
+            const access_token = await JwtService.generateAccessToken(user);
 
-            const refresh_token = await JwtService.generateToken({
-                user_id: user.id,
-                refresh_token: true
-            }, '1 hour');
+            const refresh_token = await JwtService.generateAccessToken(user);
 
             return res.json({ user, access_token, refresh_token });
 
@@ -45,15 +39,9 @@ export class AuthController {
 
         }
 
-        const access_token = await JwtService.generateToken({
-            user_id: user.id,
-            access_token: true
-        }, '5 minutes');
+        const access_token = await JwtService.generateAccessToken(user);
 
-        const refresh_token = await JwtService.generateToken({
-            user_id: user.id,
-            refresh_token: true
-        }, '1 hour');
+        const refresh_token = await JwtService.generateAccessToken(user);
 
         return res.json({ user, access_token, refresh_token });
 
@@ -73,10 +61,7 @@ export class AuthController {
                     return res.sendStatus(401);
                 }
 
-                const access_token = await JwtService.generateToken({
-                    user_id: decoded.user_id,
-                    access_token: true
-                }, '5 minutes');
+                const access_token = await JwtService.generateAccessToken(new User({ id: decoded.user_id }));
 
                 return res.json({
                     access_token,
