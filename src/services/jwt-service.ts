@@ -46,13 +46,13 @@ export class JwtService {
     }
 
     public static revokeAccessToken = (token: string) => new Promise((resolve, reject) => {
-        this.revokeToken(jwtConfig.JWT_REDIS_KEY_NAME + token, jwtConfig.JWT_ACCESS_TOKEN_EXPIRED as unknown as number)
+        this.revokeToken(jwtConfig.JWT_REDIS_KEY_NAME + token, parseInt(jwtConfig.JWT_ACCESS_TOKEN_EXPIRED, 10))
             .then((response: any) => resolve(response))
             .catch((err: Error) => reject(err));
     })
 
     public static revokeRefreshToken = (token: string) => new Promise((resolve, reject) => {
-        this.revokeToken(token, jwtConfig.JWT_REFRESH_TOKEN_EXPIRED as unknown as number)
+        this.revokeToken(token, parseInt(jwtConfig.JWT_REFRESH_TOKEN_EXPIRED))
             .then((response: any) => resolve(response))
             .catch((err: Error) => reject(err));
     })
