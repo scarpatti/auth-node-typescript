@@ -1,31 +1,41 @@
 import { JwtService } from "../services/JwtService";
+import { NextFunction, Request, Response } from "express";
 
-export const AuthMiddleware = async (req: any, res: any, next: any) => {
-    const authHeader = req.headers.authorization;
+export const AuthMiddleware = async (request: Request, response: Response, next: NextFunction) => {
+  const authHeader = request.headers.authorization;
 
-    try {
-        if(!authHeader)
-            return res.status(401).json({ error: 'No token provided' });
+  try {
+    if(!authHeader)
+      return response.status(401).json({ error: 'No token provided' });
 
-        const token = JwtService.separate(authHeader);
+    const token = JwtService.separate(authHeader);
 
-        JwtService.verify(token).then((decoded: any) => {
-            if(!decoded.access_token) {
-                return res.sendStatus(401);
-            }
+    // token in deny list?
+    const inDenyList = await JwtService.verifyIsRevoked(token);
 
-            res.locals.user_id = decoded.user_id;
-
-            next();
-
-        }).catch(() => {
-            return res.status(401).json({ error: 'Invalid Token' });
-
-        });
-
-    } catch(error) {
-        return res.status(401).json({ error: 'Invalid Token' });
-
+    if (inDenyList) {
+      return response.status(401).send({
+        message: "JWT Rejected",
+      });
     }
+
+    JwtService.verify(token).then((decoded: any) => {
+      if(!decoded.access_token) {
+        return response.sendStatus(401);
+      }
+
+      response.locals.user_id = decoded.user_id;
+
+      next();
+
+    }).catch(() => {
+      return response.status(401).json({ error: 'Invalid Token' });
+
+    });
+
+  } catch(error) {
+    return response.status(401).json({ error: 'Invalid Token' });
+
+  }
 
 }
