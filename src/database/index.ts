@@ -1,28 +1,39 @@
-import Sequelize from 'sequelize';
-import config from '../config/database';
+// Setting and starting the database
+import { Prisma, PrismaClient } from "@prisma/client";
 
-// import { User } from '../models/user-model';
+const logLevel = (
+  process.env.NODE_ENV === "dev" && process.env.DEBUG === "true"
+    ? ["error", "info", "query", "warn"]
+    : ["error"]
+) as (Prisma.LogLevel | Prisma.LogDefinition)[];
 
-// const connection = new sequelize.Sequelize(config);
+const databaseURL = (
+  process.env.NODE_ENV === "test"
+    ? process.env.DATABASE_URL_TEST
+    : process.env.DATABASE_URL
+) as string;
 
-// User.init(connection);
+const prismaClient = new PrismaClient({
+  log: logLevel,
+  datasources: {
+    db: {
+      url: databaseURL,
+    },
+  },
+});
 
-// export const connection;
+export default prismaClient;
 
-class Database {
-    public connection!: Sequelize.Sequelize
-    private config: any;
+export const handleClearDatabaseBeforeTest = async () => {
+  const tables = Prisma.dmmf.datamodel.models
+    .map((model) => model.dbName)
+    .filter((table) => table);
 
-    constructor() {
-        this.config = config;
-        this.init();
-    }
-
-    init(): void {
-        this.connection = new Sequelize.Sequelize(this.config);
-    }
-}
-
-const database: Database = new Database();
-
-export default database;
+  return Promise.resolve(
+    await prismaClient.$transaction([
+      ...tables.map((table) =>
+        prismaClient.$executeRaw`TRUNCATE ${table} CASCADE;`
+      ),
+    ])
+  );
+};

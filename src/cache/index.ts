@@ -1,6 +1,6 @@
 import Redis from 'redis';
 
-const cache = Redis.createClient({ host: "auth-api-redis", password: "Redis!!@" });
+const cache = Redis.createClient({ host: "fertigation-auth-api-redis", password: "Redis!!@" });
 
 cache.on('connect', () => {
     console.log('REDIS READY');
