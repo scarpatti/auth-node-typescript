@@ -4,9 +4,9 @@ import { Resource } from "../resource";
 import { UserStoreValidator } from "../validators/UserValidator";
 
 export class UserController  {
-  public static async index({}, response: Response, next: NextFunction) {
+  public static async index(request: Request, response: Response, next: NextFunction) {
     try {
-      const users = await UserRepository.findAll();
+      const users = await UserRepository.findAll(request);
 
       next((new Resource).index({
         response: response,

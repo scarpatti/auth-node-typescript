@@ -1,10 +1,13 @@
 import { Prisma, User } from "@prisma/client";
+import { Request } from "express";
+import { PaginatedResult, PaginateFunction } from "prisma-pagination";
 import prismaClient from "../database";
 
 export default class UserRepository {
-  public static async findAll(): Promise<Omit<User, "password">[]  | null> {
-    return await prismaClient.user
-      .findMany({
+  public static async findAll(request: any): Promise<Omit<User, "password">[]  | null> {
+    return await request.paginate(
+      prismaClient.user,
+      {
         select: {
           id: true,
           name: true,
@@ -12,7 +15,8 @@ export default class UserRepository {
           createdAt: true,
           updatedAt: true
         }
-      });
+      }
+    );
   }
 
   public static async findByEmailWithPassword(email: string): Promise<User | null> {
