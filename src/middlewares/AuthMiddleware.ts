@@ -1,5 +1,6 @@
 import { JwtService } from "../services/JwtService";
 import { NextFunction, Request, Response } from "express";
+import { UnauthenticatedExcepition } from "../exceptions/UnauthenticatedExcepition";
 
 export const AuthMiddleware = async (request: Request, response: Response, next: NextFunction) => {
   const authHeader = request.headers.authorization;
@@ -37,23 +38,16 @@ export const AuthMiddleware = async (request: Request, response: Response, next:
 
       response.locals.user_id = decoded.user_id;
 
+
       next();
 
-    }).catch(() => {
-      return response.sendStatus(401).json(
-        {
-          message: 'Not authenticated',
-          error: 'Invalid Token',
-        }
-      );
+    }).catch((error) => {
+      next(new UnauthenticatedExcepition('Invalid Token'));
+      return;
     });
 
   } catch(error) {
-    return response.sendStatus(401).json(
-      {
-        message: 'Not authenticated',
-        error: 'Invalid Token',
-      }
-    );
+    next(new UnauthenticatedExcepition('Invalid Token'));
+    return;
   }
 }

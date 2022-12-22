@@ -1,6 +1,8 @@
 import express from "express";
 import { mainRoutes } from './routes';
 import cors from 'cors';
+import HandlerException from "./exceptions/Handler.exception";
+import { Paginator } from "./middlewares/Paginator";
 
 const app = express();
 
@@ -17,6 +19,10 @@ app.use(cors(options));
 
 app.use(express.json());
 
+app.use(Paginator.handler);
+
 app.use('/api/v1', mainRoutes);
+
+app.use(HandlerException.report);
 
 app.listen(3333);

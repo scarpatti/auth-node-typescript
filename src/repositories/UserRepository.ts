@@ -2,25 +2,28 @@ import { Prisma, User } from "@prisma/client";
 import prismaClient from "../database";
 
 export default class UserRepository {
-  public static async findAll(): Promise<User[] | null> {
+  public static async findAll(): Promise<Omit<User, "password">[]  | null> {
     return await prismaClient.user
       .findMany({
         select: {
-          password: false
+          id: true,
+          name: true,
+          email: true,
+          createdAt: true,
+          updatedAt: true
         }
-      })
-      .catch((e) => e);
+      });
   }
 
-  public static async findByEmail(email: string): Promise<User | null> {
+  public static async findByEmailWithPassword(email: string): Promise<User | null> {
     return await prismaClient.user
-      .findUnique({ where: { email } })
-      .catch((e) => e);
+      .findUnique({
+        where: { email },
+      });
   }
 
   public static async store(data: Prisma.UserCreateInput): Promise<User> {
     return await prismaClient.user
-      .create({ data })
-      .catch((e) => e);
+      .create({ data });
   }
 }

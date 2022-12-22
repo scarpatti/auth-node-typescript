@@ -1,32 +1,44 @@
+import { NextFunction, Request, Response } from "express";
 import UserRepository from "../repositories/UserRepository";
+import { Resource } from "../resource";
 import { UserStoreValidator } from "../validators/UserValidator";
 
 export class UserController  {
-  public static async index({}, res: any) {
-    const users = await UserRepository.findAll();
+  public static async index({}, response: Response, next: NextFunction) {
+    try {
+      const users = await UserRepository.findAll();
 
-    return res.status(200).json({
-      message: 'Users found',
-      resources: users
-    });
+      next((new Resource).index({
+        response: response,
+        resources: users,
+        message: "Users found"
+      }));
+      return;
+
+    } catch(error) {
+      next(error);
+
+    }
   }
 
-  public static async store(request: any, response: any) {
+  public static async store(request: Request, response: Response, next: NextFunction) {
     const data = request.body;
 
-    const result = await UserStoreValidator.safeParseAsync({ ...data });
+    try {
+      await UserStoreValidator.parseAsync({ ...data });
 
-    if (!result.success) {
-      return response.status(422).send(
-        {
-          message: "Validation error",
-          error: result.error.message
-        }
-      );
+      const user = await UserRepository.store(data);
+
+      next((new Resource).create({
+        response: response,
+        resources: user,
+        message: "User created"
+      }));
+      return;
+
+    } catch(error) {
+      next(error);
+
     }
-
-    const user = await UserRepository.store(data);
-
-    return response.json(user);
   }
 }
