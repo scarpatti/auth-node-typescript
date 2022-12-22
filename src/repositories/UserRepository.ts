@@ -4,7 +4,11 @@ import prismaClient from "../database";
 export default class UserRepository {
   public static async findAll(): Promise<User[] | null> {
     return await prismaClient.user
-      .findMany()
+      .findMany({
+        select: {
+          password: false
+        }
+      })
       .catch((e) => e);
   }
 

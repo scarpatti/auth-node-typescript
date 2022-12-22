@@ -9,7 +9,7 @@ services:
         image: node:alpine
         command: "npm run dev"
         ports:
-            - '${APP_PORT:-3000}:3000'
+            - '${APP_PORT:-3333}:3333'
             - "9222:9222"
         volumes:
             - './:/usr/app'

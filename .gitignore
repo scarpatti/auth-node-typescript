@@ -14,3 +14,5 @@ erd/diagram*
 !erd/diagram.er
 
 docker-compose.override.yml
+
+yarn-error.log

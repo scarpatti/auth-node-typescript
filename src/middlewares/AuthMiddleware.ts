@@ -6,7 +6,10 @@ export const AuthMiddleware = async (request: Request, response: Response, next:
 
   try {
     if(!authHeader)
-      return response.status(401).json({ error: 'No token provided' });
+      return response.status(401).json({
+        message: 'Not authenticated',
+        error: 'No token provided'
+      });
 
     const token = JwtService.separate(authHeader);
 
@@ -14,14 +17,22 @@ export const AuthMiddleware = async (request: Request, response: Response, next:
     const inDenyList = await JwtService.verifyIsRevoked(token);
 
     if (inDenyList) {
-      return response.status(401).send({
-        message: "JWT Rejected",
-      });
+      return response.sendStatus(401).json(
+        {
+          message: 'Not authenticated',
+          error: 'JWT Rejected',
+        }
+      );
     }
 
     JwtService.verify(token).then((decoded: any) => {
       if(!decoded.access_token) {
-        return response.sendStatus(401);
+        return response.sendStatus(401).json(
+          {
+            message: 'Not authenticated',
+            error: 'Invalid Token',
+          }
+        );
       }
 
       response.locals.user_id = decoded.user_id;
@@ -29,13 +40,20 @@ export const AuthMiddleware = async (request: Request, response: Response, next:
       next();
 
     }).catch(() => {
-      return response.status(401).json({ error: 'Invalid Token' });
-
+      return response.sendStatus(401).json(
+        {
+          message: 'Not authenticated',
+          error: 'Invalid Token',
+        }
+      );
     });
 
   } catch(error) {
-    return response.status(401).json({ error: 'Invalid Token' });
-
+    return response.sendStatus(401).json(
+      {
+        message: 'Not authenticated',
+        error: 'Invalid Token',
+      }
+    );
   }
-
 }

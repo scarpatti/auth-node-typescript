@@ -12,8 +12,12 @@ export class AuthController {
       const result = await UserStoreValidator.safeParseAsync({ ...data });
 
       if (!result.success) {
-        response.status(422).send(result.error.message);
-        return;
+        return response.status(422).send(
+          {
+            message: "Validation error",
+            error: result.error.message
+          }
+        );
       }
 
       const user = await UserService.store(request.body);
@@ -24,7 +28,7 @@ export class AuthController {
         const refresh_token = await JwtService.generateAccessToken(user.id);
 
         return response.status(201).json({
-          data: {
+          resources: {
             user,
             access_token,
             refresh_token
@@ -32,11 +36,17 @@ export class AuthController {
           message: "User created"
         });
       } else {
-        return response.status(500).json({ error: 'Registration failed' });
+        return response.status(500).json({
+          message: 'Registration failed',
+          error: 'Registration failed'
+        });
 
       }
     } catch(error) {
-      return response.status(500).json({ error: 'Registration failed' });
+      return response.status(500).json({
+        message: 'Registration failed',
+        error: 'Registration failed'
+      });
 
     }
   }
@@ -47,14 +57,21 @@ export class AuthController {
     const result = await UserAuthenticateValidator.safeParseAsync({ ...data });
 
     if (!result.success) {
-      response.status(422).send(result.error.message);
-      return;
+      return response.status(422).send(
+        {
+          message: "Validation error",
+          error: result.error.message
+        }
+      );
     }
 
     const user = await UserRepository.findByEmail(data.email);
 
     if(!user || !await UserService.checkPassword(data.password, user.password)) {
-      return response.status(400).json({ error: 'Password incorect' });
+      return response.status(400).json({
+        message: 'Credentials incorect',
+        error: 'Password incorect'
+      });
     }
 
     const access_token = await JwtService.generateAccessToken(user.id);
@@ -62,8 +79,8 @@ export class AuthController {
     const refresh_token = await JwtService.generateRefreshToken(user.id);
 
     return response.status(200).json({
-      data: {
-        user,
+      resources: {
+        ...user,
         access_token,
         refresh_token
       },
@@ -76,30 +93,48 @@ export class AuthController {
       const refresh_token = request.headers.authorization;
 
       if(!refresh_token)
-        return response.status(401).json({ error: 'No token provided' });
+        return response.status(401).json({
+          message: 'No token provided',
+          error: 'No token provided'
+        });
 
       const token = JwtService.separate(refresh_token);
 
       JwtService.verify(token).then(async (decoded: any) => {
         if(!decoded.refresh_token) {
-          return response.sendStatus(401);
+          return response.sendStatus(401).json(
+            {
+              message: 'Not authenticated',
+              error: 'Not authenticated',
+            }
+          );
         }
 
         const access_token = await JwtService.generateAccessToken( decoded.user_id );
 
         return response.json({
-          access_token: access_token,
-          refresh_token: decoded.refresh_token
+          message: 'Token generated',
+          resources: {
+            access_token: access_token,
+            refresh_token: decoded.refresh_token
+          }
         });
 
       }).catch(() => {
-        return response.status(401).json({ error: 'Invalid Token' });
+        return response.status(401).json({
+          message: 'Not authenticated',
+          error: 'Invalid Token'
+        });
 
       }) ;
 
     } catch(error) {
-      return response.sendStatus(401);
-
+      return response.sendStatus(401).json(
+        {
+          message: 'Not authenticated',
+          error: 'Not authenticated',
+        }
+      );
     }
   }
 
@@ -116,12 +151,18 @@ export class AuthController {
             return response.status(200).json({ message: "Token invalidated" });
 
         } else {
-          return response.status(401).json({ error: 'Invalid Token' });
+          return response.status(401).json({
+            message: 'Invalid Token',
+            error: 'Invalid Token'
+          });
 
         }
 
       } catch(error) {
-        return response.status(401).json({ error: 'Invalid Token' });
+        return response.status(401).json({
+          message: 'Invalid Token',
+          error: 'Invalid Token'
+        });
 
       }
     }

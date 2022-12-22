@@ -19,7 +19,7 @@ COPY nodemon.json ./
 # COPY ../../ .
 
 ## Container ficará ouvindo os acessos na porta 3000
-EXPOSE 3000
+EXPOSE 3333
 # EXPOSE 9222
 
 ## Não se repete no Dockerfile

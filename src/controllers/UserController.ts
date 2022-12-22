@@ -5,7 +5,10 @@ export class UserController  {
   public static async index({}, res: any) {
     const users = await UserRepository.findAll();
 
-    return res.status(200).json(users);
+    return res.status(200).json({
+      message: 'Users found',
+      resources: users
+    });
   }
 
   public static async store(request: any, response: any) {
@@ -14,8 +17,12 @@ export class UserController  {
     const result = await UserStoreValidator.safeParseAsync({ ...data });
 
     if (!result.success) {
-      response.status(422).send(result.error.message);
-      return;
+      return response.status(422).send(
+        {
+          message: "Validation error",
+          error: result.error.message
+        }
+      );
     }
 
     const user = await UserRepository.store(data);
