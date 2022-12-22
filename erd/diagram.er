@@ -1,0 +1,69 @@
+title {
+    label: "UseRH Admin API Database Entity Relationship Diagram",
+    size: "20"
+}
+
+# Nice colors from Erwiz:
+# red #fcecec
+# blue #ececfc
+# green #d0e0d0
+# yellow #fbfbdb
+# orange #eee0a0
+
+# Entities / Tables
+
+[permission_types] {bgcolor: "#d0e0d0"}
+    *id {label: "int, not null"}
+    name {label: "text, not null"}
+    description {label: "text, null"}
+
+[permissions] {bgcolor: "#d0e0d0"}
+    *id {label: "int, not null"}
+    +permission_type_id {label: "int, not null"}
+    slug {label: "string, not null, unique"}
+    name {label: "text, not null"}
+    description {label: "text, null"}
+
+[permission_role] {bgcolor: "#fbfbdb"}
+    +permission_id {label: "int, not null"}
+    +role_id {label: "text, not null"}
+
+[roles] {bgcolor: "#d0e0d0"}
+    *id {label: "int, not null"}
+    name {label: "text, not null"}
+    description {label: "text, null"}
+
+[permission_user] {bgcolor: "#fbfbdb"}
+    +permission_id {label: "int, not null"}
+    +user_id {label: "uuid, not null"}
+
+[organizations] {bgcolor: "#fcecec"}
+    *id {label: "int, not null"}
+    name {label: "text, not null"}
+
+[users] {bgcolor: "#fcecec"}
+    *id {label: "uuid, not null"}
+    +role_id {label: "text, not null"}
+    +organization_id {label: "text, not null"}
+    social_name {label: "text, not null"}
+    email {label: "varchar(255), not null"}
+    phone {label: "varchar(14), null"}
+    birthday {label: "date, null"}
+    status {label: "enum(ACTIVE, INACTIVE), not null default(ACTIVE)"}
+
+
+# Relationships
+
+# Cardinality    Syntax
+# 0 or 1         ?
+# exactly 1      1
+# 0 or more      *
+# 1 or more      +
+
+users  1--*  permission_user
+users  *--1  organizations
+roles  1--*  users
+roles  1--*  permission_role
+permissions  1--*   permission_role
+permissions  *--1   permission_types
+permissions  1--*   permission_user

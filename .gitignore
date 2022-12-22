@@ -1,6 +1,16 @@
+.vscode/launch.json
+.vscode/settings.json
+
+.env*
+!.env.example
+
 node_modules
-.env
 dist
 
 .DS_Store
 */.DS_Store
+
+erd/diagram*
+!erd/diagram.er
+
+docker-compose.override.yml
