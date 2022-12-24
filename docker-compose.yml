@@ -2,37 +2,33 @@ version: '3'
 
 services:
     node:
-        container_name: auth-api-app
+        container_name: fertigation-auth-api-app
         build:
             context: .
             dockerfile: app.Dockerfile
-        image: auth/app
+        image: node:alpine
         command: "npm run dev"
         ports:
-            - '${APP_PORT:-3000}:3000'
+            - '${APP_PORT:-3333}:3333'
             - "9222:9222"
-        # environment:
-
         volumes:
             - './:/usr/app'
-            # - './dist:/usr/app/dist'
-            # - './package.json:/usr/app/package.json'
-            # - './nodemon.json:/usr/app/nodemon.json'
         networks:
-            - lan
+            - fertigation-network
         depends_on:
             - postgres
+            - redis
 
     postgres:
-        container_name: auth-api-db
-        # image: postgres
+        container_name: fertigation-auth-api-db
+        # image: postgres:12-alpine
         user: postgres
         build:
             context: .
             dockerfile: db.Dockerfile
         image: auth/database
         environment:
-            POSTGRES_USER: ${DB_USER:-postgres}
+            POSTGRES_USER: ${DB_USERNAME:-postgres}
             POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
             PGDATA: /data/postgres
         volumes:
@@ -40,28 +36,23 @@ services:
         ports:
             - '${DB_PORT:-5432}:5432'
         networks:
-            - lan
+            - fertigation-network
         restart: unless-stopped
 
-    # pgadmin:
-    #     container_name: pgadmin_container
-    #     image: dpage/pgadmin4
-    #     environment:
-    #         PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
-    #         PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
-    #         PGADMIN_CONFIG_SERVER_MODE: 'False'
-    #     volumes:
-    #         - pgadmin:/var/lib/pgadmin
-    #     ports:
-    #         - "${PGADMIN_PORT:-5050}:80"
-    #     networks:
-    #         - lan
-    #     restart: unless-stopped
+    redis:
+        container_name: fertigation-auth-api-redis
+        image: redis
+        command: redis-server --requirepass Redis!!@
+        ports:
+            - '${REDIS_DB_PORT:-6379}:6379'
+        networks:
+            - fertigation-network
+        restart: unless-stopped
 
 networks:
-    lan:
+    fertigation-network:
         driver: bridge
 
 volumes:
     postgres:
-    # pgadmin:
+    pgadmin:

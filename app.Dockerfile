@@ -1,6 +1,6 @@
 ## Comando obrigatório
 ## Baixa a imagem do node com versão alpine (versão mais simplificada e leve)
-FROM node:alpine
+FROM node:lts
 
 ## Define o local onde o app vai ficar no disco do container
 ## Pode ser o diretório que você quiser
@@ -19,7 +19,7 @@ COPY nodemon.json ./
 # COPY ../../ .
 
 ## Container ficará ouvindo os acessos na porta 3000
-EXPOSE 3000
+EXPOSE 3333
 # EXPOSE 9222
 
 ## Não se repete no Dockerfile
