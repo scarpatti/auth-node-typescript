@@ -45,10 +45,9 @@ title {
     *id {label: "uuid, not null"}
     +role_id {label: "text, not null"}
     +organization_id {label: "text, not null"}
-    social_name {label: "text, not null"}
+    name {label: "text, not null"}
     email {label: "varchar(255), not null"}
     phone {label: "varchar(14), null"}
-    birthday {label: "date, null"}
     status {label: "enum(ACTIVE, INACTIVE), not null default(ACTIVE)"}
 
 

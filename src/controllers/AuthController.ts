@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Exception } from "../Exceptions/Exception";
+import { TokenExcepition } from "../exceptions/TokenExcepition";
 import { UnauthenticatedExcepition } from "../exceptions/UnauthenticatedExcepition";
 import UserRepository from "../repositories/UserRepository";
 import { Resource } from "../resource";
@@ -84,35 +85,36 @@ export class AuthController {
       const refresh_token = request.headers.authorization;
 
       if(!refresh_token) {
-        next(new UnauthenticatedExcepition('No token provided'));
+        next(new TokenExcepition('No token provided'));
 
       } else {
         const token = JwtService.separate(refresh_token);
 
         JwtService.verify(token).then(async (decoded: any) => {
           if(!decoded.refresh_token) {
-            next(new UnauthenticatedExcepition('Unauthenticated'));
+            next(new TokenExcepition('No token provided'));
           }
 
           const access_token = await JwtService.generateAccessToken( decoded.user_id );
+          const refresh_token = await JwtService.generateRefreshToken( decoded.user_id );
 
           next((new Resource).show({
             response: response,
             resources: {
               access_token: access_token,
-              refresh_token: decoded.refresh_token
+              refresh_token: refresh_token
             },
             message: 'Token generated'
           }));
           return;
 
         }).catch(() => {
-          next(new UnauthenticatedExcepition('Invalid Token'));
+          next(new TokenExcepition('Invalid Token'));
         });
 
       }
     } catch(error) {
-      next(new UnauthenticatedExcepition('Unauthenticated'));
+      next(new TokenExcepition('Invalid Token'));
     }
   }
 
@@ -128,6 +130,7 @@ export class AuthController {
         if(result) {
           next((new Resource).show({
             response: response,
+            resources: { token: token },
             message: "Token invalidated"
           }));
           return;
