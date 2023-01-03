@@ -1,3 +1,4 @@
+import { UserStatus } from "@prisma/client";
 import { z } from "zod";
 import prismaClient from "../database";
 
@@ -11,7 +12,15 @@ export const UserStoreValidator =
 
       return user == null;
     }),
-    password: z.string()
+    roleId: z.number().refine(async (roleId) => {
+      const role = await prismaClient.role.findUnique({
+        where: { id: roleId }
+      });
+
+      return role != null;
+    }),
+    password: z.string(),
+    status: z.nativeEnum(UserStatus)
   });
 
 export const UserAuthenticateValidator =

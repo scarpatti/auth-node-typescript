@@ -1,16 +1,51 @@
-import { Prisma, RoleType } from "@prisma/client";
+import { Prisma, Role, RoleType } from "@prisma/client";
+import permissionPermissions from "./Concerns/definesPermissionPermissions";
+import userPermissions from "./Concerns/definesUserPermissions";
 
-export async function runRoles(tx: Prisma.TransactionClient, roleTypes: RoleType[]) {
+const permissionsMap = (permissions: any) => {
+  return permissions.map((permission: any) => {
+    return {
+      slug: permission.slug
+    }
+  });
+}
+export async function runRoles(tx: Prisma.TransactionClient, roleTypes: RoleType[]): Promise<Role[]> {
   const roles = [
+    {
+      name: 'Super administrador',
+      description: 'Perfil que inicialmente possui todas as permissões do sistema',
+      roleTypeId: 'Super administrador',
+      permissions: {
+        connect: [
+          ...permissionsMap(permissionPermissions),
+          ...permissionsMap(userPermissions)
+        ]
+      }
+    },
     {
       name: 'Administrador',
       description: 'Perfil que possui permissões de administrador',
-      roleTypeId: 'Administrador'
+      roleTypeId: 'Administrador',
+      permissions: {
+        connect: [
+          ...permissionsMap(userPermissions)
+        ]
+      }
     },
     {
       name: 'Usuário Padrão',
       description: 'Perfil que possui permissões de usuário comum',
-      roleTypeId: 'Usuário Padrão'
+      roleTypeId: 'Usuário Padrão',
+      permissions: {
+        connect: [
+          {
+            slug: 'list-users'
+          },
+          {
+            slug: 'show-users'
+          }
+        ]
+      }
     }
   ];
 

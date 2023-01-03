@@ -5,7 +5,7 @@ import { UnauthenticatedExcepition } from "../exceptions/UnauthenticatedExcepiti
 import UserRepository from "../repositories/UserRepository";
 import { Resource } from "../resource";
 import { JwtService } from "../services/JwtService";
-import UserService from "../services/UsersService";
+import UserService from "../services/UserService";
 import { UserAuthenticateValidator, UserStoreValidator } from "../validators/UserValidator";
 
 export class AuthController {

@@ -1,9 +1,9 @@
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import UserRepository from '../repositories/UserRepository';
 
 export default class UserService {
-  public static async store(user: User): Promise<User> {
+  public static async store(user: Prisma.UserCreateInput): Promise<User> {
     user.password = await bcrypt.hash(user.password, 10);
 
     return await UserRepository.store(user);

@@ -3,6 +3,10 @@ import { Prisma, RoleType } from "@prisma/client";
 export function runRoleTypes(tx: Prisma.TransactionClient): Promise<RoleType[]> {
   const roleTypes = [
     {
+      name: 'Super administrador',
+      description: 'Perfil que inicialmente possui todas as permissões do sistema'
+    },
+    {
       name: 'Administrador',
       description: 'Perfil que inicialmente possui permissões de administrador'
     },

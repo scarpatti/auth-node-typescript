@@ -1,8 +1,8 @@
-import { PermissionType, Prisma } from "@prisma/client";
+import { Permission, PermissionType, Prisma } from "@prisma/client";
 import permissionPermissions from "./Concerns/definesPermissionPermissions";
 import userPermissions from "./Concerns/definesUserPermissions";
 
-export async function runPermissions(tx: Prisma.TransactionClient, permissionTypes: PermissionType[]) {
+export async function runPermissions(tx: Prisma.TransactionClient, permissionTypes: PermissionType[]): Promise<Permission[]> {
   const permissions = [
     ...permissionPermissions,
     ...userPermissions

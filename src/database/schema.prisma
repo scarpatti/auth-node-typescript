@@ -25,7 +25,7 @@ model User {
   email    String     @unique
   password String
   phone    String?
-  status   UserStatus
+  status   UserStatus @default(ACTIVE)
 
   roleId Int
   role   Role @relation(fields: [roleId], references: [id])
