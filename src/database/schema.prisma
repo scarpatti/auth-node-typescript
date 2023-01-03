@@ -11,13 +11,50 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
+
 model User {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  name     String
+  email    String     @unique
+  password String
+  phone    String?
+  status   UserStatus
+
+  @@map("users")
+}
+
+model PermissionType {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
-  name      String
-  email     String   @unique
-  password  String
 
-  @@map("users")
+  type        String  @unique
+  name        String
+  description String?
+
+  permissions Permission[]
+
+  @@map("permission_types")
+}
+
+model Permission {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  slug        String  @unique
+  name        String
+  description String?
+
+  permissionTypeId Int            @map("permission_type_id")
+  permissionType   PermissionType @relation(fields: [permissionTypeId], references: [id])
+
+  @@map("permissions")
 }

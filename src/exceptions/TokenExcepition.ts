@@ -1,6 +1,6 @@
-import { Exception } from "./Exception";
+import { Exception as ExceptionBase } from "./Exception";
 
-export class TokenExcepition extends Exception {
+export class TokenExcepition extends ExceptionBase {
     constructor(errors: any = {}) {
       super();
       this.message = "Token error";
