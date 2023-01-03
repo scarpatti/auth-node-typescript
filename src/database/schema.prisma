@@ -27,6 +27,11 @@ model User {
   phone    String?
   status   UserStatus
 
+  roleId Int
+  role   Role @relation(fields: [roleId], references: [id])
+
+  permissions Permission[]
+
   @@map("users")
 }
 
@@ -56,5 +61,41 @@ model Permission {
   permissionTypeId Int            @map("permission_type_id")
   permissionType   PermissionType @relation(fields: [permissionTypeId], references: [id])
 
+  roles Role[]
+
+  User   User?   @relation(fields: [userId], references: [id])
+  userId String?
+
   @@map("permissions")
+}
+
+model RoleType {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  name        String  @unique
+  description String?
+
+  roles Role[]
+
+  @@map("role_types")
+}
+
+model Role {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  name        String  @unique
+  description String?
+
+  roleTypeId Int      @map("role_type_id")
+  roleType   RoleType @relation(fields: [roleTypeId], references: [id])
+
+  permissions Permission[]
+
+  Users User[]
+
+  @@map("roles")
 }

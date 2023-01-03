@@ -1,13 +1,21 @@
 import prismaClient from "..";
 import runPermissions from "./permissions";
 import runPermissionTypes from "./permissionTypes";
+import runRoles from "./roles";
+import runRoleTypes from "./roleTypes";
 
 async function main() {
   try {
     prismaClient.$transaction(async (tx) => {
       const permissionTypes = await runPermissionTypes(tx);
       await runPermissions(tx, permissionTypes);
-    }, {timeout: 10000000});
+
+      const roleTypes = await runRoleTypes(tx);
+      await runRoles(tx, roleTypes);
+    }, {
+      maxWait: 30000,
+      timeout: 60000
+    });
 
 
   } catch(error) {

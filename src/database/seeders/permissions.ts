@@ -9,9 +9,7 @@ export async function runPermissions(tx: Prisma.TransactionClient, permissionTyp
   ];
 
   const result = permissions.map((permission) => {
-    console.log(1,permissionTypes)
     const permissionType = permissionTypes.find((permissionType) => permissionType.type === permission.permissionTypeId);
-    console.log(2,permissionType)
 
     if(!permissionType) {
       throw new Error (`Permission type not exist: ${permission.permissionTypeId}`);
