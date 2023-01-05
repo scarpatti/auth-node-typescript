@@ -1,11 +1,11 @@
 import express from 'express';
 import {UserController} from '../controllers/UserController';
-import {AuthMiddleware} from '../middlewares/AuthMiddleware';
+import {AuthMiddleware} from '../middleware/AuthMiddleware';
 
 
 const usersRoutes = express.Router();
 
-usersRoutes.use(AuthMiddleware);
+// usersRoutes.use(AuthMiddleware);
 
 usersRoutes.get('/', UserController.index);
 usersRoutes.get('/:id');

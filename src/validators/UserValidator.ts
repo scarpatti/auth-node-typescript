@@ -12,25 +12,20 @@ export const UserStoreValidator =
 
       return user == null;
     }),
-    roleId: z.number().refine(async (roleId) => {
+    roleId: z.string().transform((val) => Number(val)).refine(async (roleId) => {
       const role = await prismaClient.role.findUnique({
         where: { id: roleId }
       });
 
       return role != null;
     }),
-    password: z.string(),
-    status: z.nativeEnum(UserStatus)
-  });
-
-export const UserAuthenticateValidator =
-  z.object({
-    email: z.string().email().refine(async (email) => {
-      const user = await prismaClient.user.findUnique({
-        where: { email: email }
+    companyId: z.string().refine(async (companyId) => {
+      const company = await prismaClient.company.findUnique({
+        where: { id: companyId }
       });
 
-      return user != null;
+      return company != null;
     }),
-    password: z.string()
+    password: z.string(),
+    status: z.nativeEnum(UserStatus).optional()
   });

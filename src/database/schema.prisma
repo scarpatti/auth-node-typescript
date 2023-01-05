@@ -28,9 +28,12 @@ model User {
   status   UserStatus @default(ACTIVE)
 
   roleId Int
-  role   Role @relation(fields: [roleId], references: [id])
+  Role   Role @relation(fields: [roleId], references: [id])
 
-  permissions Permission[]
+  Permissions Permission[]
+
+  companyId String
+  Company   Company @relation(fields: [companyId], references: [id])
 
   @@map("users")
 }
@@ -44,7 +47,7 @@ model PermissionType {
   name        String
   description String?
 
-  permissions Permission[]
+  Permissions Permission[]
 
   @@map("permission_types")
 }
@@ -59,12 +62,12 @@ model Permission {
   description String?
 
   permissionTypeId Int            @map("permission_type_id")
-  permissionType   PermissionType @relation(fields: [permissionTypeId], references: [id])
+  PermissionType   PermissionType @relation(fields: [permissionTypeId], references: [id])
 
-  roles Role[]
+  Roles Role[]
 
-  User   User?   @relation(fields: [userId], references: [id])
   userId String?
+  User   User?   @relation(fields: [userId], references: [id])
 
   @@map("permissions")
 }
@@ -77,7 +80,7 @@ model RoleType {
   name        String  @unique
   description String?
 
-  roles Role[]
+  Roles Role[]
 
   @@map("role_types")
 }
@@ -91,11 +94,31 @@ model Role {
   description String?
 
   roleTypeId Int      @map("role_type_id")
-  roleType   RoleType @relation(fields: [roleTypeId], references: [id])
+  RoleType   RoleType @relation(fields: [roleTypeId], references: [id])
 
-  permissions Permission[]
+  Permissions Permission[]
 
   Users User[]
 
   @@map("roles")
+}
+
+enum CompanyStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model Company {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  name String
+  cnpj String @unique
+
+  status CompanyStatus @default(ACTIVE)
+
+  Users User[]
+
+  @@map("companies")
 }

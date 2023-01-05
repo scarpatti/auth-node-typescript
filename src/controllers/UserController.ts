@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import UserRepository from "../repositories/UserRepository";
 import { Resource } from "../resource";
+import UserService from "../services/UserService";
 import { UserStoreValidator } from "../validators/UserValidator";
 
 export class UserController  {
@@ -22,12 +23,12 @@ export class UserController  {
   }
 
   public static async store(request: Request, response: Response, next: NextFunction) {
-    const data = request.body;
+    let data = request.body;
 
     try {
-      await UserStoreValidator.parseAsync({ ...data });
+      data = await UserStoreValidator.parseAsync({ ...data });
 
-      const user = await UserRepository.store(data);
+      const user = await UserService.store(data);
 
       next((new Resource).create({
         response: response,
