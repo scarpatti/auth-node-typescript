@@ -9,6 +9,10 @@ export default class UserService {
     return await UserRepository.store(user);
   }
 
+  public static async update(id: string, data: Prisma.UserUpdateInput): Promise<User> {
+    return await UserRepository.update(id, data);
+  }
+
   public static async find(
     userId: string
   ): Promise<Omit<User, 'password'>

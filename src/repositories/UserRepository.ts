@@ -56,4 +56,14 @@ export default class UserRepository {
     return await prismaClient.user
       .create({ data });
   }
+
+  public static async update(id: string, data: Prisma.UserUpdateInput): Promise<User> {
+    return await prismaClient.user
+      .update({
+        where: {
+          id: id
+        },
+        data: data
+      });
+  }
 }
