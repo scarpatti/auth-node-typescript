@@ -2,6 +2,7 @@ import express from 'express';
 import authRoutes from './auth.routes';
 import plotsRoutes from './plots.routes';
 import rolesRoutes from './roles.routes';
+import sectionsRoutes from './sections.routes';
 import usersRoutes from './users.routes';
 import zonesRoutes from './zones.routes';
 
@@ -16,3 +17,4 @@ privateRoutes.use('/users', usersRoutes);
 privateRoutes.use('/roles', rolesRoutes);
 privateRoutes.use('/plots', plotsRoutes);
 privateRoutes.use('/zones', zonesRoutes);
+privateRoutes.use('/sections', sectionsRoutes);
