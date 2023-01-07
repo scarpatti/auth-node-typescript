@@ -1,11 +1,15 @@
 import { NextFunction, Request, Response } from "express";
+import Policy from "../Policies/Policy";
 import UserRepository from "../repositories/UserRepository";
 import { Resource } from "../resource";
-import { UserStoreValidator } from "../validators/UserValidator";
+import UserService from "../services/UserService";
+import { UserStoreValidator, UserUpdateValidator } from "../validators/UserValidator";
 
 export class UserController  {
   public static async index(request: Request, response: Response, next: NextFunction) {
     try {
+      Policy.check(request, ['list-users']);
+
       const users = await UserRepository.findAll(request);
 
       next((new Resource).index({
@@ -21,18 +25,85 @@ export class UserController  {
     }
   }
 
+  public static async show(request: Request, response: Response, next: NextFunction) {
+    try {
+      const userId = request.params.id;
+
+      const user = await UserRepository.find(userId);
+
+      next((new Resource).show({
+        response: response,
+        resources: user,
+        message: "User found"
+      }));
+      return;
+
+    } catch(error) {
+      next(error);
+
+    }
+  }
+
+  public static async profile(request: Request, response: Response, next: NextFunction) {
+    try {
+      const user = await UserRepository.find(request.user.id);
+
+      const permissions = user?.Role.Permissions?.map((permission) => {
+        return permission.slug;
+      });
+
+      delete user?.Role.Permissions;
+
+      next((new Resource).show({
+        response: response,
+        resources: {
+          ...user,
+          permissions
+        },
+        message: "User found"
+      }));
+      return;
+
+    } catch(error) {
+      next(error);
+
+    }
+  }
+
   public static async store(request: Request, response: Response, next: NextFunction) {
-    const data = request.body;
+    let data = request.body;
 
     try {
-      await UserStoreValidator.parseAsync({ ...data });
+      data = await UserStoreValidator.parseAsync({ ...data });
 
-      const user = await UserRepository.store(data);
+      const user = await UserService.store(data);
 
       next((new Resource).create({
         response: response,
         resources: user,
         message: "User created"
+      }));
+      return;
+
+    } catch(error) {
+      next(error);
+
+    }
+  }
+  public static async update(request: Request, response: Response, next: NextFunction) {
+    const userId = request.params.id;
+    let data = request.body;
+
+    try {
+      data = await UserUpdateValidator.parseAsync({ ...data, userId });
+      delete data.userId;
+
+      const user = await UserService.update(userId, data);
+
+      next((new Resource).update({
+        response: response,
+        resources: user,
+        message: "User updated"
       }));
       return;
 

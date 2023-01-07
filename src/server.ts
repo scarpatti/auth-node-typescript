@@ -1,8 +1,9 @@
 import express from "express";
-import { mainRoutes } from './routes';
+import { privateRoutes, publicRoutes } from './routes';
 import cors from 'cors';
 import HandlerException from "./exceptions/Handler.exception";
-import { Paginator } from "./middlewares/Paginator";
+import { Paginator } from "./middleware/Paginator";
+import { AuthMiddleware } from "./middleware/AuthMiddleware";
 
 const app = express();
 
@@ -22,7 +23,8 @@ app.use(express.json());
 
 app.use(Paginator.handler);
 
-app.use('/api/v1', mainRoutes);
+app.use('/api/v1', publicRoutes);
+app.use('/api/v1', AuthMiddleware, privateRoutes);
 
 app.use(HandlerException.report);
 

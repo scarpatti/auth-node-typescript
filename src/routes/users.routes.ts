@@ -1,14 +1,13 @@
 import express from 'express';
 import {UserController} from '../controllers/UserController';
-import {AuthMiddleware} from '../middlewares/AuthMiddleware';
 
 
 const usersRoutes = express.Router();
 
-usersRoutes.use(AuthMiddleware);
-
 usersRoutes.get('/', UserController.index);
-usersRoutes.get('/:id');
+usersRoutes.get('/profile', UserController.profile);
+usersRoutes.get('/:id', UserController.show);
 usersRoutes.post('/', UserController.store);
+usersRoutes.put('/:id', UserController.update);
 
 export default usersRoutes;

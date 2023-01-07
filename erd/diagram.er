@@ -14,6 +14,7 @@ title {
 
 [permission_types] {bgcolor: "#d0e0d0"}
 		*id {label: "int, not null"}
+		type {label: "text, UNIQUE not null"}
 		name {label: "text, not null"}
 		description {label: "text, null"}
 
@@ -39,14 +40,15 @@ title {
 		+permission_id {label: "int, not null"}
 		+role_id {label: "text, not null"}
 
-[organizations] {bgcolor: "#fcecec"}
+[companies] {bgcolor: "#fcecec"}
 		*id {label: "int, not null"}
 		name {label: "text, not null"}
+		cnpj {label: "text, not null"}
 
 [users] {bgcolor: "#fcecec"}
 		*id {label: "uuid, not null"}
 		+role_id {label: "int, not null"}
-		+organization_id {label: "text, not null"}
+		+company_id {label: "text, not null"}
 		name {label: "text, not null"}
 		email {label: "varchar(255), not null"}
 		phone {label: "varchar(14), null"}
@@ -58,7 +60,7 @@ title {
 
 [pumps] {bgcolor: "#d0e0d0"}
 		*id {label: "int, not null"}
-		+organization_id {label: "int, not null"}
+		+company_id {label: "int, not null"}
 		device_id {label: "int, not null"}
 		type {label: "enum(MOTO, ELETRO), not null"}
 		fleet {label: "text, not null"}
@@ -67,7 +69,7 @@ title {
 
 [reels] {bgcolor: "#d0e0d0"}
 		*id {label: "int, not null"}
-		+organization_id {label: "int, not null"}
+		+company_id {label: "int, not null"}
 		device_id {label: "int, not null"}
 		fleet {label: "text, not null"}
 		hose_length {label: "tinyint, not null"}
@@ -75,32 +77,29 @@ title {
 
 [carts] {bgcolor: "#d0e0d0"}
 		*id {label: "int, not null"}
-		+organization_id {label: "int, not null"}
+		+company_id {label: "int, not null"}
 		device_id {label: "int, not null"}
 		fleet {label: "text, not null"}
 
 [groups] {bgcolor: "#d0e0d0"}
 		*id {label: "int, not null"}
-		+organization_id {label: "int, not null"}
+		+company_id {label: "int, not null"}
 		device_id {label: "int, not null"}
 
 [plots] {bgcolor: "#eee0a0"}
 		*id {label: "int, not null"}
-		+organization_id {label: "int, not null"}
-		device_id {label: "int, not null"}
-		description {label: "text, null"}
+		+company_id {label: "int, not null"}
+		name {label: "text, not null"}
 
 [zones] {bgcolor: "#eee0a0"}
 		*id {label: "int, not null"}
-		+organization_id {label: "int, not null"}
-		device_id {label: "int, not null"}
-		description {label: "text, null"}
+		+company_id {label: "int, not null"}
+		name {label: "text, not null"}
 
 [sections] {bgcolor: "#eee0a0"}
 		*id {label: "int, not null"}
-		+organization_id {label: "int, not null"}
-		device_id {label: "int, not null"}
-		description {label: "text, null"}
+		+company_id {label: "int, not null"}
+		name {label: "text, not null"}
 
 [irrigations] {bgcolor: "#fbfbdb"}
 		*id {label: "int, not null"}
@@ -132,7 +131,7 @@ title {
 
 [temporary_metrics] {bgcolor: "#fcecec"}
 		*id {label: "int, not null"}
-		+organization_id {label: "int, not null"}
+		+company_id {label: "int, not null"}
 		+device_id {label: "int, not null"}
 		latitude {label: "text, not null"}
 		longitude {label: "text, not null"}
@@ -145,7 +144,7 @@ title {
 
 [metrics] {bgcolor: "#fcecec"}
 		*id {label: "int, not null"}
-		+organization_id {label: "int, not null"}
+		+company_id {label: "int, not null"}
 		+device_id {label: "int, not null"}
 		latitude {label: "text, not null"}
 		longitude {label: "text, not null"}
@@ -166,7 +165,7 @@ title {
 # 1 or more      +
 
 users  1--*  permission_user
-users  *--1  organizations
+users  *--1  companies
 roles  1--*  users
 roles  *--1  role_types
 roles  1--*  permission_role
@@ -180,15 +179,15 @@ operations *--1 zones
 operations *--1 sections
 operations *--1 pulls
 irrigations 1--* pulls
-irrigations *--1 organizations
+irrigations *--1 companies
 irrigations *--1 groups
 groups 1--* pumps
 groups 1--* reels
 groups 1--* carts
-groups *--1 organizations
-organizations 1--* pumps
-organizations 1--* reels
-organizations 1--* carts
-organizations 1--* plots
-organizations 1--* zones
-organizations 1--* sections
+groups *--1 companies
+companies 1--* pumps
+companies 1--* reels
+companies 1--* carts
+companies 1--* plots
+companies 1--* zones
+companies 1--* sections

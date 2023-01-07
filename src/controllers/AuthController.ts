@@ -1,40 +1,60 @@
 import { NextFunction, Request, Response } from "express";
+import { roleTypeEnum } from "../enums/roleTypeEnum";
 import { Exception } from "../Exceptions/Exception";
 import { TokenExcepition } from "../exceptions/TokenExcepition";
 import { UnauthenticatedExcepition } from "../exceptions/UnauthenticatedExcepition";
+import RoleRepository from "../repositories/RoleRepository";
 import UserRepository from "../repositories/UserRepository";
 import { Resource } from "../resource";
+import CompanyService from "../services/CompanyService";
 import { JwtService } from "../services/JwtService";
-import UserService from "../services/UsersService";
-import { UserAuthenticateValidator, UserStoreValidator } from "../validators/UserValidator";
+import UserService from "../services/UserService";
+import { UserAuthenticateValidator, UserRegisterValidator } from "../validators/AuthValidator";
 
 export class AuthController {
   public static async register(request: Request, response: Response, next: NextFunction) {
     const data = request.body;
 
     try {
-      await UserStoreValidator.parseAsync({ ...data });
+      await UserRegisterValidator.parseAsync({ ...data });
 
-      const user = await UserService.store(request.body);
+      const company = await CompanyService.store({
+        name: data.companyName,
+        cnpj: data.companyCnpj,
+      });
 
-      if(user) {
-        const access_token = await JwtService.generateAccessToken(user.id);
+      const role = await RoleRepository.findByRoleTypeName(roleTypeEnum.ADMIN);
 
-        const refresh_token = await JwtService.generateAccessToken(user.id);
+      if(role) {
+        const user = await UserService.store({
+          name: data.name,
+          email: data.email,
+          password: data.password,
+          roleId: role.id,
+          companyId: company.id
+        });
 
-        next((new Resource).create({
-          response: response,
-          resources: {
-            user,
-            access_token,
-            refresh_token
-          },
-          message: "User created"
-        }));
-        return;
+        if(user) {
+          const access_token = await JwtService.generateAccessToken(user.id);
 
+          const refresh_token = await JwtService.generateAccessToken(user.id);
+
+          next((new Resource).create({
+            response: response,
+            resources: {
+              user,
+              access_token,
+              refresh_token
+            },
+            message: "User created"
+          }));
+          return;
+
+        } else {
+          next(new Exception('Registration failed'));
+        }
       } else {
-        next(new Exception('Registration failed'));
+        next(new Exception('Role not found'));
       }
 
     } catch(error) {
@@ -66,7 +86,6 @@ export class AuthController {
         next((new Resource).show({
           response: response,
           resources: {
-            ...user,
             access_token,
             refresh_token
           },
