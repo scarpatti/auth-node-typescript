@@ -3,6 +3,7 @@ import dashboardPermissions from "./Concerns/definesDashboardPermissions";
 import permissionPermissions from "./Concerns/definesPermissionPermissions";
 import plotPermissions from "./Concerns/definesPlotPermissions";
 import userPermissions from "./Concerns/definesUserPermissions";
+import zonePermissions from "./Concerns/definesZonePermissions";
 
 const permissionsMap = (permissions: any) => {
   return permissions.map((permission: any) => {
@@ -23,6 +24,7 @@ export async function runRoles(tx: Prisma.TransactionClient, roleTypes: RoleType
           ...permissionsMap(permissionPermissions),
           ...permissionsMap(userPermissions),
           ...permissionsMap(plotPermissions),
+          ...permissionsMap(zonePermissions),
         ]
       }
     },
@@ -35,6 +37,7 @@ export async function runRoles(tx: Prisma.TransactionClient, roleTypes: RoleType
           ...permissionsMap(dashboardPermissions),
           ...permissionsMap(userPermissions),
           ...permissionsMap(plotPermissions),
+          ...permissionsMap(zonePermissions),
         ]
       }
     },

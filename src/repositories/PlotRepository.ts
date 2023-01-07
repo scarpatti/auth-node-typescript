@@ -1,7 +1,7 @@
 import { Plot, Prisma } from "@prisma/client";
 import prismaClient from "../database";
 
-export default class RoleRepository {
+export default class PlotRepository {
   public static async findAll(request: any): Promise<Plot[]  | null> {
     return await request.paginate(
       prismaClient.plot,

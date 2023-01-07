@@ -1,14 +1,14 @@
 import { z } from "zod";
 import prismaClient from "../database";
 
-export const PlotStoreValidator =
+export const ZoneStoreValidator =
   z.object({
     name: z.string().refine(async (name) => {
-      const plot = await prismaClient.plot.findUnique({
+      const zone = await prismaClient.zone.findUnique({
         where: { name: name }
       });
 
-      return plot == null;
+      return zone == null;
     }),
     companyId: z.string().refine(async (companyId) => {
       const company = await prismaClient.company.findUnique({
@@ -19,14 +19,14 @@ export const PlotStoreValidator =
     }),
   });
 
-export const PlotUpdateValidator =
+export const ZoneUpdateValidator =
   z.object({
     id: z.number().refine(async (id) => {
-      const plot = await prismaClient.plot.findUnique({
+      const zone = await prismaClient.zone.findUnique({
         where: { id: Number(id) }
       });
 
-      return plot != null;
+      return zone != null;
     }),
     name: z.string().optional(),
   });

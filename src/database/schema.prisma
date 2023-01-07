@@ -117,7 +117,7 @@ model Company {
 
   Users User[]
   Plots Plot[]
-  // Zones    Zone[]
+  Zones Zone[]
   // Sections Section[]
 
   @@map("companies")
@@ -136,18 +136,18 @@ model Plot {
   @@map("plots")
 }
 
-// model Zone {
-//   id        Int      @id @default(autoincrement())
-//   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-//   updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+model Zone {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
 
-//   name String @unique
+  name String @unique
 
-//   companyId String  @map("company_id")
-//   Company   Company @relation(fields: [companyId], references: [id])
+  companyId String  @map("company_id")
+  Company   Company @relation(fields: [companyId], references: [id])
 
-//   @@map("zones")
-// }
+  @@map("zones")
+}
 
 // model Section {
 //   id        Int      @id @default(autoincrement())

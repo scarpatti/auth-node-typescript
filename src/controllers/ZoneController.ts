@@ -1,20 +1,20 @@
 import { NextFunction, Request, Response } from "express";
 import Policy from "../Policies/Policy";
-import PlotRepository from "../repositories/PlotRepository";
+import ZoneRepository from "../repositories/ZoneRepository";
 import { Resource } from "../resource";
-import { PlotStoreValidator, PlotUpdateValidator } from "../validators/PlotValidator";
+import { ZoneStoreValidator, ZoneUpdateValidator } from "../validators/ZoneValidator";
 
-export class PlotController  {
+export class ZoneController  {
   public static async index(request: Request, response: Response, next: NextFunction) {
     try {
-      Policy.check(request, ['list-plots']);
+      Policy.check(request, ['list-zones']);
 
-      const plots = await PlotRepository.findAll(request);
+      const zones = await ZoneRepository.findAll(request);
 
       next((new Resource).index({
         response: response,
-        resources: plots,
-        message: "Plots found"
+        resources: zones,
+        message: "Zones found"
       }));
       return;
 
@@ -26,16 +26,16 @@ export class PlotController  {
 
   public static async show(request: Request, response: Response, next: NextFunction) {
     try {
-      Policy.check(request, ['show-plots']);
+      Policy.check(request, ['show-zones']);
 
       const id = Number(request.params.id);
 
-      const plot = await PlotRepository.find(id);
+      const zone = await ZoneRepository.find(id);
 
       next((new Resource).show({
         response: response,
-        resources: plot,
-        message: "Plot found"
+        resources: zone,
+        message: "Zone found"
       }));
       return;
 
@@ -49,16 +49,16 @@ export class PlotController  {
     let data = request.body;
 
     try {
-      Policy.check(request, ['create-plots']);
+      Policy.check(request, ['create-zones']);
 
-      data = await PlotStoreValidator.parseAsync({ ...data });
+      data = await ZoneStoreValidator.parseAsync({ ...data });
 
-      const plot = await PlotRepository.store(data);
+      const zone = await ZoneRepository.store(data);
 
       next((new Resource).create({
         response: response,
-        resources: plot,
-        message: "Plot created"
+        resources: zone,
+        message: "Zone created"
       }));
       return;
 
@@ -72,17 +72,17 @@ export class PlotController  {
     let data = request.body;
 
     try {
-      Policy.check(request, ['update-plots']);
+      Policy.check(request, ['update-zones']);
 
-      data = await PlotUpdateValidator.parseAsync({ ...data, id });
+      data = await ZoneUpdateValidator.parseAsync({ ...data, id });
       delete data.id;
 
-      const plot = await PlotRepository.update(id, data);
+      const zone = await ZoneRepository.update(id, data);
 
       next((new Resource).update({
         response: response,
-        resources: plot,
-        message: "Plot updated"
+        resources: zone,
+        message: "Zone updated"
       }));
       return;
 
