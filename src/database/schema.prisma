@@ -123,6 +123,7 @@ model Company {
 
   Pumps Pump[]
   Reels Reel[]
+  Carts Cart[]
 
   @@map("companies")
 }
@@ -205,4 +206,19 @@ model Reel {
 
   @@unique([deviceCode, companyId])
   @@map("reels")
+}
+
+model Cart {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  deviceCode Int    @map("device_code")
+  fleet      String
+
+  companyId String  @map("company_id")
+  Company   Company @relation(fields: [companyId], references: [id])
+
+  @@unique([deviceCode, companyId])
+  @@map("carts")
 }

@@ -1,4 +1,5 @@
 import { Prisma, Role, RoleType } from "@prisma/client";
+import cartPermissions from "./Concerns/definesCartPermission";
 import dashboardPermissions from "./Concerns/definesDashboardPermissions";
 import permissionPermissions from "./Concerns/definesPermissionPermissions";
 import plotPermissions from "./Concerns/definesPlotPermissions";
@@ -31,6 +32,7 @@ export async function runRoles(tx: Prisma.TransactionClient, roleTypes: RoleType
           ...permissionsMap(sectionPermissions),
           ...permissionsMap(pumpPermissions),
           ...permissionsMap(reelPermissions),
+          ...permissionsMap(cartPermissions),
         ]
       }
     },
@@ -47,6 +49,7 @@ export async function runRoles(tx: Prisma.TransactionClient, roleTypes: RoleType
           ...permissionsMap(sectionPermissions),
           ...permissionsMap(pumpPermissions),
           ...permissionsMap(reelPermissions),
+          ...permissionsMap(cartPermissions),
         ]
       }
     },
