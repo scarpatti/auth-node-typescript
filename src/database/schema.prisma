@@ -115,10 +115,13 @@ model Company {
 
   status CompanyStatus @default(ACTIVE)
 
-  Users    User[]
+  Users User[]
+
   Plots    Plot[]
   Zones    Zone[]
   Sections Section[]
+
+  Pumps Pump[]
 
   @@map("companies")
 }
@@ -160,4 +163,28 @@ model Section {
   Company   Company @relation(fields: [companyId], references: [id])
 
   @@map("sections")
+}
+
+enum PumpType {
+  MOTO
+  ELETRO
+}
+
+model Pump {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  type PumpType
+
+  deviceCode Int    @map("device_code")
+  fleet      String
+  model      String
+  power      Int
+
+  companyId String  @map("company_id")
+  Company   Company @relation(fields: [companyId], references: [id])
+
+  @@unique([deviceCode, companyId])
+  @@map("pumps")
 }

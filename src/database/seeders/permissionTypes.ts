@@ -25,12 +25,17 @@ export function runPermissionTypes(tx: Prisma.TransactionClient): Promise<Permis
     {
       type: 'Zones',
       name: 'Zonas',
-      description: 'Permissões relacionadas a zonas'
+      description: 'Permissões relacionadas à zonas'
     },
     {
       type: 'Sections',
       name: 'Seções',
       description: 'Permissões relacionadas a seções'
+    },
+    {
+      type: 'Pumps',
+      name: 'Bombas',
+      description: 'Permissões relacionadas à bombas'
     },
   ];
 

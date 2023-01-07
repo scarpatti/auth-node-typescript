@@ -1,32 +1,32 @@
 const sectionPermissions = [
   {
     slug: 'list-sections',
-    name: 'Listar zonas',
-    description: 'Listar zonas',
+    name: 'Listar seções',
+    description: 'Listar seções',
     permissionTypeId: 'Sections'
   },
   {
     slug: 'show-sections',
-    name: 'Visualizar zonas',
-    description: 'Visualizar zonas',
+    name: 'Visualizar seções',
+    description: 'Visualizar seções',
     permissionTypeId: 'Sections'
   },
   {
     slug: 'create-sections',
-    name: 'Criar zonas',
-    description: 'Criar zonas',
+    name: 'Criar seções',
+    description: 'Criar seções',
     permissionTypeId: 'Sections'
   },
   {
     slug: 'update-sections',
-    name: 'Atualizar zonas',
-    description: 'Atualizar zonas',
+    name: 'Atualizar seções',
+    description: 'Atualizar seções',
     permissionTypeId: 'Sections'
   },
   {
     slug: 'delete-sections',
-    name: 'Excluir zonas',
-    description: 'Excluir zonas',
+    name: 'Excluir seções',
+    description: 'Excluir seções',
     permissionTypeId: 'Sections'
   },
 ];
