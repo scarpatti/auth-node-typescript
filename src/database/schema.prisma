@@ -27,12 +27,12 @@ model User {
   phone    String?
   status   UserStatus @default(ACTIVE)
 
-  roleId Int
+  roleId Int  @map("role_id")
   Role   Role @relation(fields: [roleId], references: [id])
 
   Permissions Permission[]
 
-  companyId String
+  companyId String  @map("company_id")
   Company   Company @relation(fields: [companyId], references: [id])
 
   @@map("users")
@@ -65,9 +65,7 @@ model Permission {
   PermissionType   PermissionType @relation(fields: [permissionTypeId], references: [id])
 
   Roles Role[]
-
-  userId String?
-  User   User?   @relation(fields: [userId], references: [id])
+  Users User[]
 
   @@map("permissions")
 }
@@ -97,8 +95,7 @@ model Role {
   RoleType   RoleType @relation(fields: [roleTypeId], references: [id])
 
   Permissions Permission[]
-
-  Users User[]
+  Users       User[]
 
   @@map("roles")
 }
@@ -119,6 +116,48 @@ model Company {
   status CompanyStatus @default(ACTIVE)
 
   Users User[]
+  Plots Plot[]
+  // Zones    Zone[]
+  // Sections Section[]
 
   @@map("companies")
 }
+
+model Plot {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  name String @unique
+
+  companyId String  @map("company_id")
+  Company   Company @relation(fields: [companyId], references: [id])
+
+  @@map("plots")
+}
+
+// model Zone {
+//   id        Int      @id @default(autoincrement())
+//   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+//   updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+//   name String @unique
+
+//   companyId String  @map("company_id")
+//   Company   Company @relation(fields: [companyId], references: [id])
+
+//   @@map("zones")
+// }
+
+// model Section {
+//   id        Int      @id @default(autoincrement())
+//   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+//   updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+//   name String @unique
+
+//   companyId String  @map("company_id")
+//   Company   Company @relation(fields: [companyId], references: [id])
+
+//   @@map("sections")
+// }

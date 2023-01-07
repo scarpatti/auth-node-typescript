@@ -89,17 +89,17 @@ title {
 [plots] {bgcolor: "#eee0a0"}
 		*id {label: "int, not null"}
 		+company_id {label: "int, not null"}
-		name {label: "text, not null"}
+		name {label: "text, UNIQUE not null"}
 
 [zones] {bgcolor: "#eee0a0"}
 		*id {label: "int, not null"}
 		+company_id {label: "int, not null"}
-		name {label: "text, not null"}
+		name {label: "text, UNIQUE not null"}
 
 [sections] {bgcolor: "#eee0a0"}
 		*id {label: "int, not null"}
 		+company_id {label: "int, not null"}
-		name {label: "text, not null"}
+		name {label: "text, UNIQUE not null"}
 
 [irrigations] {bgcolor: "#fbfbdb"}
 		*id {label: "int, not null"}

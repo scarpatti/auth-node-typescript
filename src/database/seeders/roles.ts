@@ -1,6 +1,7 @@
 import { Prisma, Role, RoleType } from "@prisma/client";
 import dashboardPermissions from "./Concerns/definesDashboardPermissions";
 import permissionPermissions from "./Concerns/definesPermissionPermissions";
+import plotPermissions from "./Concerns/definesPlotPermissions";
 import userPermissions from "./Concerns/definesUserPermissions";
 
 const permissionsMap = (permissions: any) => {
@@ -21,6 +22,7 @@ export async function runRoles(tx: Prisma.TransactionClient, roleTypes: RoleType
           ...permissionsMap(dashboardPermissions),
           ...permissionsMap(permissionPermissions),
           ...permissionsMap(userPermissions),
+          ...permissionsMap(plotPermissions),
         ]
       }
     },
@@ -32,6 +34,7 @@ export async function runRoles(tx: Prisma.TransactionClient, roleTypes: RoleType
         connect: [
           ...permissionsMap(dashboardPermissions),
           ...permissionsMap(userPermissions),
+          ...permissionsMap(plotPermissions),
         ]
       }
     },

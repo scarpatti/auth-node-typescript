@@ -27,6 +27,8 @@ export class UserController  {
 
   public static async show(request: Request, response: Response, next: NextFunction) {
     try {
+      Policy.check(request, ['show-users']);
+
       const userId = request.params.id;
 
       const user = await UserRepository.find(userId);
@@ -74,6 +76,8 @@ export class UserController  {
     let data = request.body;
 
     try {
+      Policy.check(request, ['create-users']);
+
       data = await UserStoreValidator.parseAsync({ ...data });
 
       const user = await UserService.store(data);
@@ -95,6 +99,8 @@ export class UserController  {
     let data = request.body;
 
     try {
+      Policy.check(request, ['update-users']);
+
       data = await UserUpdateValidator.parseAsync({ ...data, userId });
       delete data.userId;
 
