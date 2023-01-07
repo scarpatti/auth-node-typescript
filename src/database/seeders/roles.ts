@@ -3,6 +3,7 @@ import dashboardPermissions from "./Concerns/definesDashboardPermissions";
 import permissionPermissions from "./Concerns/definesPermissionPermissions";
 import plotPermissions from "./Concerns/definesPlotPermissions";
 import pumpPermissions from "./Concerns/definesPumpPermissions";
+import reelPermissions from "./Concerns/definesReelPermissions";
 import sectionPermissions from "./Concerns/definesSectionPermissions";
 import userPermissions from "./Concerns/definesUserPermissions";
 import zonePermissions from "./Concerns/definesZonePermissions";
@@ -29,6 +30,7 @@ export async function runRoles(tx: Prisma.TransactionClient, roleTypes: RoleType
           ...permissionsMap(zonePermissions),
           ...permissionsMap(sectionPermissions),
           ...permissionsMap(pumpPermissions),
+          ...permissionsMap(reelPermissions),
         ]
       }
     },
@@ -44,6 +46,7 @@ export async function runRoles(tx: Prisma.TransactionClient, roleTypes: RoleType
           ...permissionsMap(zonePermissions),
           ...permissionsMap(sectionPermissions),
           ...permissionsMap(pumpPermissions),
+          ...permissionsMap(reelPermissions),
         ]
       }
     },

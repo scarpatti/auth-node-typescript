@@ -122,6 +122,7 @@ model Company {
   Sections Section[]
 
   Pumps Pump[]
+  Reels Reel[]
 
   @@map("companies")
 }
@@ -187,4 +188,21 @@ model Pump {
 
   @@unique([deviceCode, companyId])
   @@map("pumps")
+}
+
+model Reel {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  deviceCode   Int    @map("device_code")
+  fleet        String
+  hoseLength   Int    @map("hose_length")
+  hoseDiameter Int    @map("hose_diameter")
+
+  companyId String  @map("company_id")
+  Company   Company @relation(fields: [companyId], references: [id])
+
+  @@unique([deviceCode, companyId])
+  @@map("reels")
 }

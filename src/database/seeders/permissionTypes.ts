@@ -37,6 +37,11 @@ export function runPermissionTypes(tx: Prisma.TransactionClient): Promise<Permis
       name: 'Bombas',
       description: 'Permissões relacionadas à bombas'
     },
+    {
+      type: 'Reels',
+      name: 'Carretéis',
+      description: 'Permissões relacionadas a carretéis'
+    },
   ];
 
   const result = permissionTypes.map(async (permissionType) => {
