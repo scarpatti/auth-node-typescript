@@ -17,7 +17,7 @@ export default class UserService {
     userId: string
   ): Promise<Omit<User, 'password'>
   & { Role: Role
-    & { Permissions: Permission[] }
+    & { Permissions?: Permission[] }
     & { RoleType: RoleType }}
   | null> {
     const user = await UserRepository.find(userId);

@@ -35,7 +35,7 @@ export default class UserRepository {
   ): Promise<
     Omit<User, 'password'>
     & { Role: Role
-      & { Permissions: Permission[] }
+      & { Permissions?: Permission[] }
       & { RoleType: RoleType }}
   | null> {
     return await prismaClient.user

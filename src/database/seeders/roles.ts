@@ -1,4 +1,5 @@
 import { Prisma, Role, RoleType } from "@prisma/client";
+import dashboardPermissions from "./Concerns/definesDashboardPermissions";
 import permissionPermissions from "./Concerns/definesPermissionPermissions";
 import userPermissions from "./Concerns/definesUserPermissions";
 
@@ -15,10 +16,11 @@ export async function runRoles(tx: Prisma.TransactionClient, roleTypes: RoleType
       name: 'Super administrador',
       description: 'Perfil que inicialmente possui todas as permissões do sistema',
       roleTypeId: 'Super administrador',
-      permissions: {
+      Permissions: {
         connect: [
+          ...permissionsMap(dashboardPermissions),
           ...permissionsMap(permissionPermissions),
-          ...permissionsMap(userPermissions)
+          ...permissionsMap(userPermissions),
         ]
       }
     },
@@ -26,9 +28,10 @@ export async function runRoles(tx: Prisma.TransactionClient, roleTypes: RoleType
       name: 'Administrador',
       description: 'Perfil que possui permissões de administrador',
       roleTypeId: 'Administrador',
-      permissions: {
+      Permissions: {
         connect: [
-          ...permissionsMap(userPermissions)
+          ...permissionsMap(dashboardPermissions),
+          ...permissionsMap(userPermissions),
         ]
       }
     },
@@ -36,14 +39,9 @@ export async function runRoles(tx: Prisma.TransactionClient, roleTypes: RoleType
       name: 'Usuário Padrão',
       description: 'Perfil que possui permissões de usuário comum',
       roleTypeId: 'Usuário Padrão',
-      permissions: {
+      Permissions: {
         connect: [
-          {
-            slug: 'list-users'
-          },
-          {
-            slug: 'show-users'
-          }
+          ...permissionsMap(dashboardPermissions),
         ]
       }
     }

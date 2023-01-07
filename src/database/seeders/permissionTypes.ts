@@ -4,13 +4,18 @@ export function runPermissionTypes(tx: Prisma.TransactionClient): Promise<Permis
   const permissionTypes = [
     {
       type: 'Permissions',
-      name: 'Permissõesdddddd',
+      name: 'Permissões',
       description: 'Permissões relacionadas a permissões'
     },
     {
       type: 'Users',
       name: 'Usuários',
       description: 'Permissões relacionadas a usuários'
+    },
+    {
+      type: 'Dashboard',
+      name: 'Dashboard',
+      description: 'Permissões relacionadas ao dashboard'
     }
   ];
 

@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import Policy from "../Policies/Policy";
 import UserRepository from "../repositories/UserRepository";
 import { Resource } from "../resource";
 import UserService from "../services/UserService";
@@ -7,6 +8,8 @@ import { UserStoreValidator, UserUpdateValidator } from "../validators/UserValid
 export class UserController  {
   public static async index(request: Request, response: Response, next: NextFunction) {
     try {
+      Policy.check(request, ['list-users']);
+
       const users = await UserRepository.findAll(request);
 
       next((new Resource).index({
@@ -45,9 +48,18 @@ export class UserController  {
     try {
       const user = await UserRepository.find(request.user.id);
 
+      const permissions = user?.Role.Permissions?.map((permission) => {
+        return permission.slug;
+      });
+
+      delete user?.Role.Permissions;
+
       next((new Resource).show({
         response: response,
-        resources: user,
+        resources: {
+          ...user,
+          permissions
+        },
         message: "User found"
       }));
       return;
