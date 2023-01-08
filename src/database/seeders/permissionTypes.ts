@@ -3,6 +3,11 @@ import { PermissionType, Prisma } from "@prisma/client";
 export function runPermissionTypes(tx: Prisma.TransactionClient): Promise<PermissionType[]> {
   const permissionTypes = [
     {
+      type: 'Dashboard',
+      name: 'Dashboard',
+      description: 'Permissões relacionadas ao dashboard'
+    },
+    {
       type: 'Permissions',
       name: 'Permissões',
       description: 'Permissões relacionadas a permissões'
@@ -13,10 +18,40 @@ export function runPermissionTypes(tx: Prisma.TransactionClient): Promise<Permis
       description: 'Permissões relacionadas a usuários'
     },
     {
-      type: 'Dashboard',
-      name: 'Dashboard',
-      description: 'Permissões relacionadas ao dashboard'
-    }
+      type: 'Plots',
+      name: 'Talhões',
+      description: 'Permissões relacionadas a talhões'
+    },
+    {
+      type: 'Zones',
+      name: 'Zonas',
+      description: 'Permissões relacionadas à zonas'
+    },
+    {
+      type: 'Sections',
+      name: 'Seções',
+      description: 'Permissões relacionadas a seções'
+    },
+    {
+      type: 'Pumps',
+      name: 'Bombas',
+      description: 'Permissões relacionadas à bombas'
+    },
+    {
+      type: 'Reels',
+      name: 'Carretéis',
+      description: 'Permissões relacionadas a carretéis'
+    },
+    {
+      type: 'Carts',
+      name: 'Carrinhos',
+      description: 'Permissões relacionadas a carrinhos'
+    },
+    {
+      type: 'Groups',
+      name: 'Conjuntos',
+      description: 'Permissões relacionadas a conjuntos'
+    },
   ];
 
   const result = permissionTypes.map(async (permissionType) => {

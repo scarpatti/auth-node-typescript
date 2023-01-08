@@ -61,7 +61,7 @@ title {
 [pumps] {bgcolor: "#d0e0d0"}
 		*id {label: "int, not null"}
 		+company_id {label: "int, not null"}
-		device_id {label: "int, not null"}
+		device_code {label: "int, not null"}
 		type {label: "enum(MOTO, ELETRO), not null"}
 		fleet {label: "text, not null"}
 		model {label: "text, not null"}
@@ -70,7 +70,7 @@ title {
 [reels] {bgcolor: "#d0e0d0"}
 		*id {label: "int, not null"}
 		+company_id {label: "int, not null"}
-		device_id {label: "int, not null"}
+		device_code {label: "int, not null"}
 		fleet {label: "text, not null"}
 		hose_length {label: "tinyint, not null"}
 		hose_diameter {label: "tinyint, not null"}
@@ -78,28 +78,28 @@ title {
 [carts] {bgcolor: "#d0e0d0"}
 		*id {label: "int, not null"}
 		+company_id {label: "int, not null"}
-		device_id {label: "int, not null"}
+		device_code {label: "int, not null"}
 		fleet {label: "text, not null"}
 
 [groups] {bgcolor: "#d0e0d0"}
 		*id {label: "int, not null"}
 		+company_id {label: "int, not null"}
-		device_id {label: "int, not null"}
+		code {label: "int, not null"}
 
 [plots] {bgcolor: "#eee0a0"}
 		*id {label: "int, not null"}
 		+company_id {label: "int, not null"}
-		name {label: "text, not null"}
+		name {label: "text, UNIQUE not null"}
 
 [zones] {bgcolor: "#eee0a0"}
 		*id {label: "int, not null"}
 		+company_id {label: "int, not null"}
-		name {label: "text, not null"}
+		name {label: "text, UNIQUE not null"}
 
 [sections] {bgcolor: "#eee0a0"}
 		*id {label: "int, not null"}
 		+company_id {label: "int, not null"}
-		name {label: "text, not null"}
+		name {label: "text, UNIQUE not null"}
 
 [irrigations] {bgcolor: "#fbfbdb"}
 		*id {label: "int, not null"}
@@ -132,7 +132,8 @@ title {
 [temporary_metrics] {bgcolor: "#fcecec"}
 		*id {label: "int, not null"}
 		+company_id {label: "int, not null"}
-		+device_id {label: "int, not null"}
+		+device_code {label: "int, not null"}
+		+device_type {label: "int, not null"}
 		latitude {label: "text, not null"}
 		longitude {label: "text, not null"}
 		speed {label: "text, not null"}
@@ -145,7 +146,8 @@ title {
 [metrics] {bgcolor: "#fcecec"}
 		*id {label: "int, not null"}
 		+company_id {label: "int, not null"}
-		+device_id {label: "int, not null"}
+		+device_code {label: "int, not null"}
+		+device_type {label: "int, not null"}
 		latitude {label: "text, not null"}
 		longitude {label: "text, not null"}
 		speed {label: "text, not null"}
