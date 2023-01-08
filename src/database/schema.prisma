@@ -124,6 +124,7 @@ model Company {
   Pumps Pump[]
   Reels Reel[]
   Carts Cart[]
+  Group Group[]
 
   @@map("companies")
 }
@@ -186,6 +187,7 @@ model Pump {
 
   companyId String  @map("company_id")
   Company   Company @relation(fields: [companyId], references: [id])
+  Group     Group?
 
   @@unique([deviceCode, companyId])
   @@map("pumps")
@@ -203,6 +205,7 @@ model Reel {
 
   companyId String  @map("company_id")
   Company   Company @relation(fields: [companyId], references: [id])
+  Group     Group?
 
   @@unique([deviceCode, companyId])
   @@map("reels")
@@ -218,7 +221,31 @@ model Cart {
 
   companyId String  @map("company_id")
   Company   Company @relation(fields: [companyId], references: [id])
+  Group     Group?
 
   @@unique([deviceCode, companyId])
   @@map("carts")
+}
+
+model Group {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  code Int
+
+  pumpId Int  @unique
+  Pump   Pump @relation(fields: [pumpId], references: [id])
+
+  reelId Int  @unique
+  Reel   Reel @relation(fields: [reelId], references: [id])
+
+  cartId Int  @unique
+  Cart   Cart @relation(fields: [cartId], references: [id])
+
+  companyId String  @map("company_id")
+  Company   Company @relation(fields: [companyId], references: [id])
+
+  @@unique([code, companyId])
+  @@map("groups")
 }

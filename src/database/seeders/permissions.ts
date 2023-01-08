@@ -1,6 +1,7 @@
 import { Permission, PermissionType, Prisma } from "@prisma/client";
 import cartPermissions from "./Concerns/definesCartPermission";
 import dashboardPermissions from "./Concerns/definesDashboardPermissions";
+import groupPermissions from "./Concerns/definesGroupPermissions";
 import permissionPermissions from "./Concerns/definesPermissionPermissions";
 import plotPermissions from "./Concerns/definesPlotPermissions";
 import pumpPermissions from "./Concerns/definesPumpPermissions";
@@ -19,7 +20,8 @@ export async function runPermissions(tx: Prisma.TransactionClient, permissionTyp
     ...sectionPermissions,
     ...pumpPermissions,
     ...reelPermissions,
-    ...cartPermissions
+    ...cartPermissions,
+    ...groupPermissions
   ];
 
   const result = permissions.map((permission) => {

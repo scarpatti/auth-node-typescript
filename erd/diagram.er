@@ -84,7 +84,7 @@ title {
 [groups] {bgcolor: "#d0e0d0"}
 		*id {label: "int, not null"}
 		+company_id {label: "int, not null"}
-		device_code {label: "int, not null"}
+		code {label: "int, not null"}
 
 [plots] {bgcolor: "#eee0a0"}
 		*id {label: "int, not null"}
